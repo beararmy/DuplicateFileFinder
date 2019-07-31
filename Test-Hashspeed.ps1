@@ -3,11 +3,12 @@
 param
 (
     $testFile = "J:\Phone.zip",
-    $thisScript = "./Test-Hashspeed.ps1"
+    $thisScript = "./Test-Hashspeed.ps1",
+    $numberAttempts = "100"
 )
 
 $container = @()
-1..2 | ForEach-Object {
+1..$numberAttempts | ForEach-Object {
     "SHA1", "SHA256", "SHA384", "SHA512", "MACTripleDES", "MD5", "RIPEMD160" | ForEach-Object {
         $ht = [PSCustomObject]@{
             Algorithm    = $_;
