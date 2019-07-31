@@ -4,7 +4,8 @@ param
 (
     $testFile = "J:\Phone.zip",
     $thisScript = "./Test-Hashspeed.ps1",
-    $numberAttempts = "100"
+    $numberAttempts = "100",
+    $justSuggest = $false
 )
 
 $container = @()
@@ -17,10 +18,19 @@ $container = @()
         $container += $ht
     } 
 }
-Write-Host "Lower is better, time is average time to hash $testfile in milliseconds."    
-$container | Group-Object -Property Algorithm | ForEach-Object { 
-    [PSCustomObject]@{
-        Algorithm = $_.Name
-        Average   = ($_.Group | Select-Object -ExpandProperty milliseconds | Measure-Object -Average ).average 
-    }
-} | Sort-Object -Property Average
+  
+$output = ($container | Group-Object -Property Algorithm | ForEach-Object { 
+        [PSCustomObject]@{
+            Algorithm = $_.Name
+            Average   = ($_.Group | Select-Object -ExpandProperty milliseconds | Measure-Object -Average ).average 
+        }
+    } | Sort-Object -Property Average
+)
+
+if ($justSuggest) {
+    Write-Host $output[0].Algorithm
+}
+else {
+    Write-Host "Lower is better, time is average time to hash $testfile in milliseconds."  
+    write-host $output
+}
